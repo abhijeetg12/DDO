@@ -1,0 +1,12 @@
+Firt part of the code is the data_preprocessing.py for images of the code generated. 
+What is sincluded in in generation code
+
+Report will include: 
+Images:1: Mouse actual images cropped fromm the videos. 3*3
+Images:2: The corresponding coordinates visualised on matplotlib. 3*3
+Images:3: Optionsby Deep dscovery options in Gridworld environment. 
+
+------------------------------------------------------------------------
+Drawbacks with the code: 
+Only COM's movement is considered. 
+Only 4 actions are present. 
