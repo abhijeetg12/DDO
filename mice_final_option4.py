@@ -75,7 +75,7 @@ data2=f2['poseest']['points'].value
 
 data=data.astype('float64')
 data2= data2.astype('float64')
-data=data[2000:]
+data=data[20000:]
 data=np.vstack((data,data2[2000:]))
 data=data[:5000]
 l=len(data)
