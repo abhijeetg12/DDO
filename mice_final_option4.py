@@ -55,8 +55,8 @@ import ffmpeg
 np.random.seed(0)
 
 ############# Importing the data, the length of the data from pose1 file is ? ###############
-filename = '../../Data/pose1.h5'
-filename2= '../../Data/pose2.h5'
+filename = 'Data/pose1.h5'
+filename2= 'Data/pose2.h5'
 f = h5py.File(filename, 'r')
 f2= h5py.File(filename2, 'r')
 	
