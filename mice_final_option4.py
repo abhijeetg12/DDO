@@ -53,7 +53,7 @@ import h5py
 import ffmpeg
 
 np.random.seed(0)
-
+tf.set_random_seed(1)
 ############# Importing the data, the length of the data from pose1 file is ? ###############
 filename = 'Data/pose1.h5'
 filename2= 'Data/pose2.h5'
