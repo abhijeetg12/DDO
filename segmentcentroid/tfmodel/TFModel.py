@@ -425,13 +425,13 @@ class TFModel(object):
         kmeans.fit(state_action_array)
 
         
-        from sklearn.decomposition import PCA
-        import matplotlib.pyplot as plt
-        p = PCA(n_components=2)
-        x = p.fit_transform(state_array)
-        plt.scatter(x[:,0], x[:,1])
-        plt.show()
-        raise ValueError("Break Point")
+        # from sklearn.decomposition import PCA
+        # import matplotlib.pyplot as plt
+        # p = PCA(n_components=2)
+        # x = p.fit_transform(state_array)
+        # plt.scatter(x[:,0], x[:,1])
+        # plt.show()
+        # raise ValueError("Break Point")
         
 
         for i in range(vqiterations):

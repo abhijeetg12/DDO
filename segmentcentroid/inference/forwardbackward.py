@@ -82,11 +82,11 @@ class ForwardBackward(object):
 
         for t in traj:
 
-            print(t[0].shape, self.model.statedim,t[1].shape, self.model.actiondim)
+            #print(t[0].shape, self.model.statedim,t[1].shape, self.model.actiondim)
 
             if (t[0].shape == self.model.statedim) and \
                 (t[1].shape == self.model.actiondim):
-                #print ("Veroor1")
+                print ("Veroor1")
                 continue
 
             #allow for automatic squeezes of the last dimension
@@ -114,7 +114,7 @@ class ForwardBackward(object):
                 if t[1].shape != self.model.actiondim:
                     print("d")
                     return False
-        print ("Valid Trajectory!, acti0ndim, statedim",self.model.actiondim, self.model.statedim)
+        # ("Valid Trajectory!, acti0ndim, statedim",self.model.actiondim, self.model.statedim)
         return True
 
 

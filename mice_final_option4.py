@@ -51,36 +51,12 @@ import matplotlib.animation as animation
 import tensorflow as tf
 import h5py
 import ffmpeg
+from data_pre import get_data 
 
 np.random.seed(0)
 tf.set_random_seed(1)
 ############# Importing the data, the length of the data from pose1 file is ? ###############
-filename = 'Data/pose1.h5'
-filename2= 'Data/pose2.h5'
-f = h5py.File(filename, 'r')
-f2= h5py.File(filename2, 'r')
-	
-# List all groups
-#print("Keys: %s" % f.keys())
-a_group_key = list(f.keys())[0]
-
-#print (list(f.keys())[0])
-
-# # Get the data
-data = list(f[a_group_key])
-data2 = list(f2[a_group_key])
-#print (data)
-data=f['poseest']['points'].value
-data2=f2['poseest']['points'].value
-
-data=data.astype('float64')
-data2= data2.astype('float64')
-data=data[20000:]
-data=np.vstack((data,data2[2000:]))
-data=data[:5000]
-l=len(data)
-
-
+data=get_data()
 
 ############### centralising the data #################
 data_0=data
@@ -132,8 +108,8 @@ We need to divide up the trajectories in sets.
 '''
 full_traj=[]
 #the full trajectory imeension will be set at 10,10,2,12,2 
-episode_len=10
-no_episode=10
+episode_len=1000
+no_episode=900
 for j in range(0,no_episode):
 	episode=[]
 	for i in range(episode_len):
@@ -159,9 +135,9 @@ for j in range(0,no_episode):
 #print (np.shape(full_traj),full_traj)
 
 demonstrations=10
-super_iterations=20000#3000#10000
-sub_iterations=0
-learning_rate=10
+super_iterations=1500#3000#10000
+sub_iterations=10
+learning_rate=.1
 
 
 #k=4 in  this case. number of primitive options
@@ -172,13 +148,13 @@ with tf.variable_scope("optimizer"):
 	opt = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
 	#define he optimizer,  put the full trajectorty, 1000, 0 
 	closs,tloss=m.train(opt, full_traj, super_iterations, sub_iterations)
-	np.save('options/closs', closs)
-	np.save('options/tloss', tloss)
+	np.save('options/loss/closs', closs)
+	np.save('options/loss/tloss', tloss)
 	print (closs,len(closs) ,'this is closs')
 	plt.plot(range(len(closs)),closs)
-	plt.savefig('options/closs.png')
+	plt.savefig('options/loss/closs.png')
 	plt.plot(range(len(tloss)),tloss)
-	plt.savefig('options/tloss.png')
+	plt.savefig('options/loss/tloss.png')
 
 
 '''So how do we generate the visualised options?
@@ -200,8 +176,8 @@ actions = np.eye(12)
 
 policy_hash = {}
 trans_hash = {}
-len_option=10
-init_state=1050
+len_option=50
+init_state=1000#1050
 state=data[init_state] #1000
 
 
@@ -233,19 +209,19 @@ for i in range(m.k):
 	for j in range(len_option):
 
 	
-		print (i, 'is the option evaluation')
+		#print (i, 'is the option evaluation')
 		#print (state)
 		#l=[np.ravel(m.evalpi(i,[(state, data[1000+k])])) for k in [0,1,2,3] ]
 
 		#l=[np.ravel(m.evalpi(i,[(state,actions[k,:])])) for k in [0,1,2,3]]
 		l=[np.ravel(m.evalpi(i,[(state, action_set[k])])) for k in range(len(action_set)) ]
-		print (l)
+		#print (l)
 		action = [np.argmax(l)]
-		print (action)
+		#print (action)
 		state = state+.1*action_set[int(action[0])] # reducing the impace of one action in mouse movement
 		state -= state[6] #Normalising the state of the mouse
 
-		print (state)
+		#print (state)
 
 		opn_i.append(state)
 
@@ -308,16 +284,16 @@ Writer = animation.writers['ffmpeg']
 writer = Writer(fps=5, metadata=dict(artist='Me'), bitrate=1800)
 
 anim = animation.FuncAnimation(fig, _update_plot, fargs = (fig, scat),frames = len_option, interval = 50)
-anim.save('options/option1_4.mp4', writer=writer)
+anim.save('options/final/option1_f_'+str(init_state)+'_'+str(len_option)+'.mp4', writer=writer)
 
 anim = animation.FuncAnimation(fig, _update_plot1, fargs = (fig, scat),frames = len_option, interval = 50)
-anim.save('options/option2_4.mp4', writer=writer)
+anim.save('options/final/option2_f_'+str(init_state)+'_'+str(len_option)+'.mp4', writer=writer)
 
 anim = animation.FuncAnimation(fig, _update_plot2, fargs = (fig, scat),frames = len_option, interval = 50)
-anim.save('options/option3_4.mp4', writer=writer)
+anim.save('options/final/option3_f_'+str(init_state)+'_'+str(len_option)+'.mp4', writer=writer)
 
 anim = animation.FuncAnimation(fig, _update_plot3, fargs = (fig, scat),frames = len_option, interval = 50)
-anim.save('options/option4_4.mp4', writer=writer)
+anim.save('options/final/option4_f_'+str(init_state)+'_'+str(len_option)+'.mp4', writer=writer)
 
 #plt.show()  
 
